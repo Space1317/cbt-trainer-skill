@@ -1,0 +1,5 @@
+# Local / runtime noise
+.codenomad/
+node_modules/
+.opencode/node_modules/
+*.log

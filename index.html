@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBT Trainer — настройка сессии</title>
+<style>
+  :root {
+    --bg: #f3f6f8;
+    --panel: #ffffff;
+    --ink: #16282e;
+    --muted: #5b6e76;
+    --line: #dde5ea;
+    --accent: #0e7a6d;
+    --accent-soft: #e1f2ef;
+    --accent-2: #4f46e5;
+    --warn: #b45309;
+    --chip: #eef2f5;
+    --radius: 14px;
+    --shadow: 0 1px 3px rgba(15, 42, 51, .06), 0 8px 24px rgba(15, 42, 51, .05);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 15px/1.5 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  a { color: var(--accent); }
+
+  header.page {
+    background: linear-gradient(120deg, #0c3b3a, #0e7a6d 60%, #12a08e);
+    color: #fff;
+    padding: 26px 28px 22px;
+  }
+  header.page h1 { margin: 0 0 4px; font-size: 22px; letter-spacing: .2px; }
+  header.page p { margin: 0; max-width: 760px; color: #cfe8e5; font-size: 13.5px; }
+  header.page .badges { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+  header.page .badge {
+    font-size: 12px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
+    padding: 3px 10px; border-radius: 999px;
+  }
+
+  .wrap {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 22px;
+    padding: 22px 28px 60px;
+    align-items: start;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  @media (max-width: 1020px) { .wrap { grid-template-columns: 1fr; } }
+
+  section.card, aside.summary {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 20px 20px;
+    margin-bottom: 18px;
+  }
+  section.card > h2 {
+    margin: 0 0 4px; font-size: 16px; display: flex; align-items: center; gap: 8px;
+  }
+  section.card > h2 .step {
+    background: var(--accent); color: #fff; border-radius: 8px; font-size: 12px;
+    width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;
+  }
+  section.card > .hint { margin: 0 0 14px 30px; color: var(--muted); font-size: 13px; }
+  section.card > h2 .mark { margin-left: auto; font-size: 12px; color: var(--muted); font-weight: 400; }
+
+  /* segmented choice (format, scale) */
+  .seg {
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .seg .opt {
+    flex: 1 1 200px; cursor: pointer; border: 1.5px solid var(--line); background: #fff;
+    border-radius: 12px; padding: 12px 14px; transition: border-color .12s, background .12s, box-shadow .12s;
+  }
+  .seg .opt:hover { border-color: #b9cdd4; }
+  .seg .opt.selected {
+    border-color: var(--accent); background: var(--accent-soft);
+    box-shadow: 0 0 0 1px var(--accent) inset;
+  }
+  .seg .opt .t { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .seg .opt .d { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  /* patient grid */
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px;
+  }
+  .pcard {
+    text-align: left; cursor: pointer; border: 1.5px solid var(--line); background: #fff;
+    border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 6px;
+    font: inherit; transition: border-color .12s, background .12s, box-shadow .12s;
+  }
+  .pcard:hover { border-color: #b9cdd4; }
+  .pcard.selected {
+    border-color: var(--accent); background: var(--accent-soft);
+    box-shadow: 0 0 0 1px var(--accent) inset;
+  }
+  .pcard .row1 { display: flex; align-items: center; gap: 10px; }
+  .pcard .ava {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px;
+    flex: 0 0 auto;
+  }
+  .pcard:nth-of-type(5n+2) .ava { background: #7c3aed; }
+  .pcard:nth-of-type(5n+3) .ava { background: #d97706; }
+  .pcard:nth-of-type(5n+4) .ava { background: #2563eb; }
+  .pcard:nth-of-type(5n+5) .ava { background: #be123c; }
+  .pcard .who { line-height: 1.2; }
+  .pcard .who .nm { font-weight: 650; font-size: 14px; }
+  .pcard .who .ag { color: var(--muted); font-size: 12px; }
+  .pcard .tag {
+    align-self: flex-start; font-size: 11px; font-weight: 600; color: var(--accent);
+    background: var(--accent-soft); border-radius: 999px; padding: 2px 9px;
+    border: 1px solid #c6e6e0;
+  }
+  .pcard .sum { font-size: 12.3px; color: var(--muted); }
+
+  .patient-detail { margin-top: 12px; }
+  .patient-detail summary {
+    cursor: pointer; font-size: 13px; color: var(--accent); user-select: none; margin-bottom: 4px;
+  }
+  .pd-box {
+    background: #f7fafb; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+    font-size: 13px;
+  }
+  .pd-box dl { display: grid; grid-template-columns: 150px 1fr; gap: 4px 12px; margin: 0; }
+  .pd-box dt { color: var(--muted); }
+  .pd-box dd { margin: 0; }
+  .pd-box ul { margin: 2px 0 0; padding-left: 16px; }
+  .pd-box .opening { font-style: italic; color: var(--accent-2); margin-top: 6px; }
+
+  /* custom patient fields */
+  .custom-fields { margin-top: 14px; border-top: 1px dashed var(--line); padding-top: 12px; display: none; }
+  .custom-fields.show { display: block; }
+  .frow { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+  .field label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 3px; }
+  .field input, .field textarea {
+    width: 100%; font: inherit; font-size: 13.5px; padding: 7px 10px; border: 1px solid var(--line);
+    border-radius: 8px; background: #fff; color: var(--ink);
+  }
+  .field textarea { resize: vertical; min-height: 52px; }
+  .field input:focus, .field textarea:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+  .field.grow { grid-column: 1 / -1; }
+
+  /* chips (TIBs, options) */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    cursor: pointer; border: 1.5px solid var(--line); background: #fff; border-radius: 999px;
+    padding: 6px 12px; font-size: 13px; display: inline-flex; align-items: center; gap: 7px;
+    transition: border-color .12s, background .12s;
+  }
+  .chip:hover { border-color: #b9cdd4; }
+  .chip .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #cfd9de; transition: background .12s;
+  }
+  .chip.on { border-color: var(--accent); background: var(--accent-soft); }
+  .chip.on .dot { background: var(--accent); }
+  .chip small { color: var(--muted); }
+
+  /* pills for scale / stage */
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    cursor: pointer; border: 1.5px solid var(--line); background: #fff; border-radius: 999px;
+    padding: 7px 14px; font-size: 13.5px;
+  }
+  .pill:hover { border-color: #b9cdd4; }
+  .pill.selected { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 640px) { .row2 { grid-template-columns: 1fr; } }
+
+  select {
+    font: inherit; font-size: 13.5px; padding: 8px 10px; border: 1px solid var(--line);
+    border-radius: 8px; background: #fff; width: 100%;
+  }
+  select:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+
+  /* summary panel */
+  aside.summary {
+    position: sticky; top: 18px; margin-bottom: 0;
+  }
+  aside.summary h2 { margin: 0 0 12px; font-size: 16px; }
+  .sum-lines { font-size: 13.5px; display: flex; flex-direction: column; gap: 6px; }
+  .sum-lines .l { display: flex; gap: 8px; }
+  .sum-lines .k { color: var(--muted); min-width: 96px; flex: 0 0 auto; }
+  .sum-lines .v { font-weight: 500; }
+  .sum-lines .v.tib-empty { color: var(--muted); font-weight: 400; }
+  .tags-inline { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tags-inline span {
+    font-size: 11.5px; background: var(--chip); border-radius: 999px; padding: 1px 8px; color: var(--ink);
+  }
+  .warn { background: #fef7e8; border: 1px solid #f3e2b8; color: var(--warn); border-radius: 10px;
+    font-size: 12.5px; padding: 9px 12px; margin: 12px 0; }
+
+  .btn-row { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .btn {
+    font: inherit; cursor: pointer; border: none; border-radius: 10px; padding: 11px 14px; font-size: 14px;
+    font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.primary:hover:not(:disabled) { background: #0b655b; }
+  .btn.secondary { background: #fff; color: var(--accent); border: 1.5px solid var(--accent); }
+  .btn.secondary:hover:not(:disabled) { background: var(--accent-soft); }
+  .btn.ghost { background: var(--chip); color: var(--ink); font-weight: 500; }
+  .btn.ghost:hover { background: #e3eaee; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+  details.out { margin-top: 14px; }
+  details.out summary {
+    cursor: pointer; font-size: 13px; color: var(--accent); user-select: none;
+  }
+  details.out textarea {
+    width: 100%; min-height: 170px; margin-top: 8px; font: 12px/1.5 Consolas, "Cascadia Mono", monospace;
+    border: 1px solid var(--line); border-radius: 8px; padding: 8px; background: #fbfdfe; color: var(--ink);
+    resize: vertical;
+  }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
+    background: #0d2f33; color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 13.5px;
+    opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 50;
+    box-shadow: 0 6px 20px rgba(0,0,0,.2);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  footer { max-width: 1280px; margin: 0 auto; padding: 0 28px 34px; color: var(--muted); font-size: 12.5px; }
+  .opt-sub { margin-left: 30px; }
+</style>
+</head>
+<body>
+
+<header class="page">
+  <h1>CBT Trainer — настройка сессии</h1>
+  <p>Подбери параметры практики: пациента, формат, шкалу компетенций, этап терапии и сложность.
+     Затем скопируй короткое сообщение для запуска в чате с навыком, либо полный промпт для ChatGPT / DeepSeek.</p>
+  <div class="badges">
+    <span class="badge">CTS-R / UCL PWP</span>
+    <span class="badge">10 пациентов</span>
+    <span class="badge">ТIBs — режим сложнее</span>
+    <span class="badge">Настройки сохраняются локально</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <main>
+    <!-- 1. Формат -->
+    <section class="card">
+      <h2><span class="step">1</span> Формат практики</h2>
+      <p class="hint">Свободная сессия — полноценная ролевая работа «пациент ↔ терапевт» с разбором по шкале.
+         Упражнение — одно умение, 10 раундов, оценка звёздами.</p>
+      <div class="seg" id="fmt-wrap"></div>
+      <div id="exercise-picker" class="opt-sub" style="margin-top:14px; display:none;">
+        <label style="font-size:13px;color:var(--muted);display:block;margin-bottom:4px;">Упражнение (цель)</label>
+        <select id="exercise"></select>
+      </div>
+    </section>
+
+    <!-- 2. Пациент -->
+    <section class="card">
+      <h2><span class="step">2</span> Пациент <span class="mark">подсказка: для «свой пациент» опиши профиль</span></h2>
+      <p class="hint">Выбери из библиотеки или создай собственный сценарий. Подробный профиль нужен тренеру (ИИ) — он попадёт в промпт.</p>
+      <div class="grid" id="pwrap"></div>
+      <div class="custom-fields" id="custom-wrap"></div>
+      <div class="patient-detail" id="patient-detail-wrap" style="display:none;">
+        <details id="patient-detail"><summary>Показать профиль пациента (для тренера / промпта)</summary></details>
+      </div>
+    </section>
+
+    <!-- 3. Настройки сессии -->
+    <section class="card">
+      <h2><span class="step">3</span> Настройки сессии</h2>
+      <div class="row2">
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Шкала компетенций</div>
+          <div class="pills" id="scale-wrap"></div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Этап терапии</div>
+          <div class="pills" id="stage-wrap"></div>
+        </div>
+      </div>
+      <div class="row2" style="margin-top:16px;">
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Сложность</div>
+          <div class="pills" id="diff-wrap"></div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Невербальные сигналы пациента</div>
+          <div class="pills" id="cues-wrap"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TIBs -->
+    <section class="card">
+      <h2><span class="step">4</span> TIBs — мешающее терапии поведение <span class="mark">доп. сложность</span></h2>
+      <p class="hint">Каждый тумблер добавляет пациенту реалистичное «сопротивление». Можно включать несколько.</p>
+      <div class="chips" id="tib-wrap"></div>
+    </section>
+  </main>
+
+  <!-- Сводка -->
+  <aside class="summary">
+    <h2>Сессия</h2>
+    <div class="sum-lines" id="summary"></div>
+    <div class="warn" id="warn-block" style="display:none;"></div>
+    <div class="btn-row">
+      <button class="btn primary" id="btn-launch" disabled>Скопировать запуск в чат</button>
+      <button class="btn secondary" id="btn-prompt" disabled>Скопировать полный промпт</button>
+      <button class="btn ghost" id="btn-reset">Сбросить настройки</button>
+    </div>
+    <details class="out">
+      <summary>Показать тексты (для ручного копирования)</summary>
+      <div style="font-size:12px;color:var(--muted);margin-top:8px;">Запуск в чат:</div>
+      <textarea id="out-launch" readonly></textarea>
+      <div style="font-size:12px;color:var(--muted);margin-top:8px;">Полный промпт:</div>
+      <textarea id="out-prompt" readonly></textarea>
+    </details>
+  </aside>
+
+</div>
+
+<footer>
+  Дополнительный тренажёр: не заменяет курс, супервизию или материалы сервиса. Оценки ИИ экспериментальны —
+  применяй собственную клиническую оценку. Модель концепции — CBT Trainer app (trainer.soymh.com).
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ===================== DATA ===================== */
+const PATIENTS = [
+  { id:"charlotte", name:"Шарлотта", age:28, tag:"ГТР", tagFull:"Генерализованное тревожное расстройство",
+    sum:"«Что если»-беспокойство о работе, здоровье и партнёре; поиск успокоения.",
+    presenting:"Постоянные «что если»-цепочки о работе, здоровье и безопасности партнёра. Непереносимость неопределённости, мышечное напряжение, плохой сон, частый поиск успокоения у коллег и партнёра.",
+    cognitions:["«Если я не буду волноваться, случится что-то плохое»","«Я не справлюсь с неопределённостью»"],
+    safety:["проверяет рабочие письма ночью","постоянно звонит партнёру","гуглит симптомы","ищет успокоения"],
+    style:"Вежливая, словоохотливая, быстро перескакивает между тревогами; извиняется, что «растекается».",
+    opening:"Простите, у меня столько всего на уме в последнее время… Я всё время прокручиваю всё в голове. Это… нормально?" },
+
+  { id:"marcus", name:"Маркус", age:34, tag:"Паника + агорафобия",
+    sum:"Панические атаки в метро; избегает автобусов и поездов; катастрофизация ощущений.",
+    presenting:"Панические атаки в метро, теперь избегает автобусов и поездов. Катастрофически трактует телесные ощущения (сердце колотится = инфаркт, головокружение = упадёт в обморок), повышенная чувствительность к телесным сигналам.",
+    cognitions:["«Эти симптомы значат, что я умираю»","«Если я запаникую на людях, все будут пялиться»"],
+    safety:["сидит у выхода","носит бутылку воды","проверяет пульс","ездит только с женой"],
+    style:"По-деловому, слегка смущается, приуменьшает своё расстройство.",
+    opening:"Началось в метро месяца четыре назад. Сердце заколотило — я реально подумал, что всё. Теперь на работу не езжу, делаю крюк, и даже это даётся всё труднее." },
+
+  { id:"priya", name:"Прия", age:22, tag:"Социальная тревожность",
+    sum:"Страх оценки, покраснения и выступлений; репетирует фразы, избегает, руминации после.",
+    presenting:"Боится чужой оценки, покраснения, выступлений и свиданий. Репетирует фразы, избегает вечеринок и выступлений в группе, подолгу «пережёвывает» события после.",
+    cognitions:["«Все видят, как я тревожусь»","«Если я покраснею, они подумают, что я странная»"],
+    safety:["проверяет телефон","крепко держит чашку","перерепетирует фразы","уходит рано","избегает зрительного контакта"],
+    style:"Тихая, извиняющаяся, точная в словах, иногда обрывает фразу.",
+    opening:"Я стала пропускать семинары. У нас скоро выступление, и я уже сейчас паникую. Знаю, звучит глупо." },
+
+  { id:"tom", name:"Том", age:19, tag:"ОКР",
+    sum:"Мытьё после «грязных» поверхностей и интрузия «а вдруг я толкнул человека»; проверки.",
+    presenting:"Ритуалы мытья после прикосновений к дверным ручкам и общественным поверхностям; интрузивные образы «а вдруг я кого-то толкнул»; нейтрализация и проверки.",
+    cognitions:["«Контакт с этой поверхностью может сделать меня серьёзно больным»","«Я плохой человек, раз у меня такие мысли»"],
+    safety:["моет руки до красноты","избегает общественных поверхностей","проверяет двери и краны","мысленно нейтрализует мысли"],
+    style:"Расстроенный, быстрый, самокритичный; переспрашивает «это звучит нормально?».",
+    opening:"Я не могу остановить эти мысли. Я намыл руки до красноты. Я поискал в интернете и думаю, у меня, может… ну, вы понимаете…" },
+
+  { id:"aisha", name:"Аиша", age:41, tag:"Депрессия",
+    sum:"Ангедония, уход от общения, «нет смысла»; поведенческая активация; тренировка оценки риска.",
+    presenting:"Сниженное настроение, ангедония, уход от друзей и хобби, пассивные дни, руминации, самокритика. На этапе оценки возможна реплика о пассивных суицидальных мыслях («иногда лучше бы не просыпаться») — без плана и намерения, для отработки оценки риска.",
+    cognitions:["«Я неудачница»","«Что бы я ни делала, ничего не меняется»"],
+    safety:["лежит в кровати","отменяет планы","не отвечает на звонки","бросает начатые занятия"],
+    style:"Плоская, медленная, мало энергии; короткие ответы; оживает при конкретном и поддерживающем подходе.",
+    opening:"Я не очень понимаю, зачем я здесь. Врач сказал прийти. Большинство дней я не могу встать с кровати — и, честно, не вижу смысла." },
+
+  { id:"daniel", name:"Дэниэл", age:47, tag:"Ипохондрия",
+    sum:"Проверяет уплотнения, гуглит симптомы, ходит к врачам за успокоением, сканирует тело.",
+    presenting:"Многократно проверяет уплотнения, гуглит симптомы, записывается к врачам за успокоением, сканирует тело на ощущения.",
+    cognitions:["«Непонятные ощущения опасны»","«Если врач пропустит — будет поздно»"],
+    safety:["проверки тела","гугл-поиск симптомов","просит анализы и тесты","избегает тем о здоровье"],
+    style:"Точный, перечисляет симптомы; тревожится, если успокоение резко забирают; хорошо реагирует, когда называют цикл, а не спорят.",
+    opening:"Вчера нашёл ещё одно уплотнение на шее. Знаю, вы скажете, что это ерунда, но прошлый врач уже однажды пропустил." },
+
+  { id:"sofia", name:"София", age:17, tag:"АРФИД",
+    sum:"Узкий список «безопасных» продуктов, страх подавиться и стошнить, конфликты за столом.",
+    presenting:"Ограничивается узким списком «безопасных» продуктов; страх подавиться и стошнить; конфликты в семье за едой; следит за весом (важно оценить медицинский риск).",
+    cognitions:["«Если я это съем, я подавлюсь»","«Безопаснее придерживаться того, что знаю»"],
+    safety:["избегает ресторанов","не ест с другими","жёсткий список продуктов","прячет еду"],
+    style:"Закрытая, защищается на тему еды, раскрывается, когда не давят; короткие фразы.",
+    opening:"Все в семье твердят — просто ешь. Они не понимают: дело не в весе. Я физически не могу это проглотить." },
+
+  { id:"ben", name:"Бен", age:30, tag:"Низкая самооценка",
+    sum:"Убеждение «я недостаточно хорош»; поиск одобрения, самокритика, прокрастинация.",
+    presenting:"Глубинное убеждение «я недостаточно хорош»; ищет одобрение, самокритичен, прокрастинирует, избегает обратной связи на работе, угождает людям.",
+    cognitions:["«Если они увидят настоящего меня — отвергнут»","«Надо сделать идеально, иначе я ничтожество»"],
+    safety:["перерабатывает, затем избегает","отказывается от задач","чрезмерно извиняется","сравнивает себя с другими"],
+    style:"Ироничный, самокритичный, интеллектуализирует; сначала отшучивается от чувств.",
+    opening:"Я всё откладываю этот отчёт на работе. Он даже не сложный — просто сижу и убеждаю себя, что облажаюсь." },
+
+  { id:"rachel", name:"Рэйчел", age:38, tag:"Бессонница",
+    sum:"Часами лежит без сна, смотрит на часы, дневной сон, страх «не заснуть».",
+    presenting:"Проводит часы в кровати без сна, смотрит на часы, спит днём, лежит расстроенная, избегает вечерних планов — вдруг «не заснёт».",
+    cognitions:["«Если я не высплюсь 8 часов — развалюсь»","«Я сейчас точно не засну»"],
+    safety:["ранний отход ко сну","долгое бодрствование в кровати","дневной сон","усилие заснуть"],
+    style:"Измотанная, раздражённая, подробно рассказывает о ночах.",
+    opening:"Три ночи на этой неделе я лежала в два часа ночи и смотрела на часы. Утром я разбита и боюсь ложиться — знаю, что просто буду лежать." },
+
+  { id:"elena", name:"Елена", age:24, tag:"Эмоц. дисрегуляция",
+    sum:"Чувствительность в отношениях, резкие смены настроения, кризисы. Сложный случай для ТIBs.",
+    presenting:"Межличностная чувствительность, резкие смены настроения, кризисно-ориентированные сессии, мышление «всё или ничего» об отношениях. В анамнезе самоповреждения (без текущего намерения), умеренный текущий риск — мониторить.",
+    cognitions:["«Все рано или поздно меня бросают»","«Я не выношу это чувство»"],
+    safety:["срочные сообщения между сессиями","отменяет сессии, когда чувствует критику","проверяет терапевта"],
+    style:"Интенсивная, драматичная, переключается между злостью и страданием; структурировать сложнее.",
+    opening:"Я чуть не пришла. Говорила себе — ты, наверное, скажешь то же, что и все: что это я виновата." },
+
+  { id:"custom", name:"Свой пациент", age:"", tag:"свой сценарий",
+    sum:"Опиши свой профиль: жалоба, убеждения, поведение, стиль. Тренер построит персонажа по описанию." }
+];
+
+const EXERCISES = [
+  { id:"agenda", name:"Постановка повестки",
+    obj:"Согласовать повестку с пациентом в первые 3 раунда; пациент соглашается на приоритеты, повестка видимо структурирует сессию." },
+  { id:"elicit", name:"Выявление ключевой автоматической мысли",
+    obj:"Вопросами (не угадывая) получить конкретную «горячую» мысль с оценкой убеждённости." },
+  { id:"socratic", name:"Сократическая проверка мысли",
+    obj:"Помочь пациенту исследовать доводы «за» и «против» одной мысли, не подсказывая вывод." },
+  { id:"experiment", name:"План поведенческого эксперимента",
+    obj:"Спроектировать конкретную проверку убеждения: прогноз, метод, план разбора результата." },
+  { id:"activation", name:"Планирование поведенческой активации",
+    obj:"Построить ступенчатый план активности из «пустого» дня, связав его с ценностями пациента." },
+  { id:"exposure", name:"Иерархия градуированной экспозиции",
+    obj:"Совместно построить 5-ступенчатую иерархию и выбрать первую посильную ступень." },
+  { id:"panic", name:"Объяснение цикла паники",
+    obj:"Объяснить цикл паники так, чтобы пациент смог пересказать его своими словами." },
+  { id:"thoughtrecord", name:"Разбор заполненной записи мыслей",
+    obj:"Проверить корректность «альтернативной сбалансированной мысли» в заполненном дневнике." }
+];
+
+const TIB_DEFS = [
+  { id:"problem-denial", name:"Отрицание проблемы", desc:"«не уверен, что это вообще проблема»" },
+  { id:"goal-avoidance", name:"Избегание целей", desc:"уходит, когда речь о целях" },
+  { id:"increased-risk", name:"Повышенный риск", desc:"появляются реплики о риске — оценить" },
+  { id:"talkativeness", name:"Разговорчивость", desc:"длинные растекающиеся ответы" },
+  { id:"silence", name:"Молчание", desc:"паузы, односложные ответы" },
+  { id:"reassurance-seeking", name:"Поиск успокоения", desc:"«скажите, со мной всё в порядке?»" },
+  { id:"topic-deflection", name:"Увод темы", desc:"меняет тему у ключевого убеждения" },
+  { id:"yes-but", name:"«Да, но…»", desc:"соглашается и сопротивляется" },
+  { id:"crisis-between", name:"Кризис между сессиями", desc:"сессия начинается с острой проблемы" }
+];
+
+const STAGES = [
+  { id:"assessment", name:"Оценка", desc:"сбор истории, подробные ответы, вопросы о процессе" },
+  { id:"engagement", name:"Вовлечение", desc:"контакт и обоснование КБТ, нормализация" },
+  { id:"formulation", name:"Формулировка", desc:"совместная модель: триггеры → мысли → эмоции → поведение" },
+  { id:"intervention", name:"Интервенция", desc:"готовность работать + реалистичное сопротивление" },
+  { id:"relapse", name:"Рецидив / завершение", desc:"стабилен, планирует, «а если вернётся?»" }
+];
+
+const SCALES = [
+  { id:"CTS-R", name:"CTS-R", desc:"12 пунктов, оценка 0–6" },
+  { id:"UCL PWP", name:"UCL PWP", desc:"low-intensity, релевантные навыки 0–6" }
+];
+
+const TIB_DESC = {
+  "problem-denial":'"Не уверен, что это вообще проблема, о которой стоит говорить."',
+  "goal-avoidance":"Уходит от темы всякий раз, когда разговор подходит к постановке целей.",
+  "increased-risk":"Появляются реплики о риске — их нужно оценить в реальном времени.",
+  "talkativeness":"Длинные растекающиеся ответы, которые сбивают структуру сессии.",
+  "silence":"Длинные паузы, односложные ответы, закрывается после расспросов.",
+  "reassurance-seeking":"Повторяет «а вы думаете, со мной всё в порядке?»",
+  "topic-deflection":"Меняет тему, как только приближаемся к ключевому убеждению.",
+  "yes-but":"Соглашается, затем сопротивляется каждому предложению.",
+  "crisis-between":"Открывает сессию новой острой проблемой, вытесняющей повестку."
+};
+
+/* ===================== STATE ===================== */
+const LS_KEY = "cbt-trainer-ui-v1";
+const state = {
+  format: "session",      // session | exercise
+  exercise: "agenda",
+  patient: null,          // id | 'custom'
+  custom: { name:"", age:"", tagFull:"", presenting:"", cognitions:"", safety:"", style:"", opening:"" },
+  scale: "CTS-R",
+  stage: "engagement",
+  difficulty: "standard", // standard | hard
+  cues: true,             // true | false
+  tibs: {}                // id -> true
+};
+
+function loadState(){
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    Object.keys(state).forEach(k => {
+      if (k === "custom") { Object.assign(state.custom, s.custom || {}); }
+      else if (typeof s[k] !== "undefined") state[k] = s[k];
+    });
+  } catch(e) {}
+}
+function saveState(){
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+/* ===================== HELPERS ===================== */
+const $ = sel => document.querySelector(sel);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+
+let toastTimer;
+function toast(msg){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function copyText(text, okMsg){
+  const done = () => toast(okMsg || "Скопировано");
+  const fallback = () => {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); done(); } catch(e) { toast("Не удалось скопировать"); }
+    ta.remove();
+  };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done).catch(fallback);
+  else fallback();
+}
+
+/* ===================== RENDER ===================== */
+function renderFormats(){
+  const items = [
+    { id:"session", t:"Свободная сессия", d:"Полноценная ролевая работа «ты — терапевт, я — пациент», разбор по запросу (.rate)." },
+    { id:"exercise", t:"Упражнение (10 раундов)", d:"Одно умение, лимит 10 раундов, оценка звёздами (1–3)." }
+  ];
+  $("#fmt-wrap").innerHTML = items.map(o => `
+    <div class="opt ${state.format===o.id?"selected":""}" data-fmt="${o.id}" role="button" tabindex="0">
+      <div class="t">${o.id==="session"?"🎭":"🎯"} ${o.t}</div>
+      <div class="d">${o.d}</div>
+    </div>`).join("");
+  $("#fmt-wrap").querySelectorAll(".opt").forEach(el => {
+    const pick = () => { state.format = el.dataset.fmt; renderFormats(); };
+    el.addEventListener("click", pick);
+    el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
+  });
+
+  const exSel = $("#exercise");
+  exSel.innerHTML = EXERCISES.map(x => `<option value="${x.id}" ${state.exercise===x.id?"selected":""}>${x.name} — ${x.obj}</option>`).join("");
+  $("#exercise-picker").style.display = state.format === "exercise" ? "block" : "none";
+}
+
+function patientLabel(p, custom){
+  if (p.id !== "custom" || !custom) return `${p.name}, ${p.age}`;
+  const nm = (custom.name || "Пациент").trim() + (custom.age ? ", " + custom.age : "");
+  return nm;
+}
+
+function renderPatients(){
+  const wrap = $("#pwrap");
+  wrap.innerHTML = PATIENTS.map(p => {
+    const sel = state.patient === p.id;
+    const nm = p.id === "custom" ? "Свой пациент" : `${p.name}, ${p.age}`;
+    return `
+    <button type="button" class="pcard ${sel?"selected":""}" data-p="${p.id}">
+      <span class="row1"><span class="ava">${p.id==="custom"?"+":esc(p.name[0])}</span>
+        <span class="who"><span class="nm">${esc(nm)}</span></span></span>
+      <span class="tag">${esc(p.tag)}</span>
+      <span class="sum">${esc(p.sum)}</span>
+    </button>`;
+  }).join("");
+  wrap.querySelectorAll(".pcard").forEach(el => {
+    el.addEventListener("click", () => {
+      state.patient = el.dataset.p;
+      if (state.patient === "custom") {
+        // keep it visible
+      }
+      renderPatients();
+    });
+  });
+  renderCustom();
+  renderPatientDetail();
+}
+
+function renderCustom(){
+  const cw = $("#custom-wrap");
+  const isCustom = state.patient === "custom";
+  cw.classList.toggle("show", isCustom);
+  if (!isCustom) return;
+  cw.innerHTML = `
+    <div class="frow">
+      <div class="field"><label>Имя</label><input id="c-name" placeholder="Например, Алекс" value="${esc(state.custom.name)}"></div>
+      <div class="field"><label>Возраст</label><input id="c-age" placeholder="Например, 35" value="${esc(state.custom.age)}"></div>
+      <div class="field"><label>Проблема (коротко)</label><input id="c-tag" placeholder="Например, панические атаки" value="${esc(state.custom.tagFull)}"></div>
+    </div>
+    <div class="frow" style="margin-top:10px;">
+      <div class="field grow"><label>Жалоба / презентация — что привело к терапии</label>
+        <textarea id="c-presenting" placeholder="Опиши, что происходит: ситуация, симптомы, чего избегает…">${esc(state.custom.presenting)}</textarea></div>
+    </div>
+    <div class="frow" style="margin-top:10px;">
+      <div class="field"><label>Ключевые убеждения (для тренера)</label>
+        <textarea id="c-cognitions" placeholder="Какие мысли крутятся, во что верит?">${esc(state.custom.cognitions)}</textarea></div>
+      <div class="field"><label>Поведение / охранные стратегии (для тренера)</label>
+        <textarea id="c-safety" placeholder="Что делает, чего избегает?">${esc(state.custom.safety)}</textarea></div>
+    </div>
+    <div class="frow" style="margin-top:10px;">
+      <div class="field"><label>Стиль общения (для тренера)</label>
+        <textarea id="c-style" placeholder="Как говорит, реагирует на давление?">${esc(state.custom.style)}</textarea></div>
+      <div class="field"><label>Вступительная реплика (необязательно)</label>
+        <textarea id="c-opening" placeholder="Первая фраза пациента…">${esc(state.custom.opening)}</textarea></div>
+    </div>`;
+  ["c-name","c-age","c-tag","c-presenting","c-cognitions","c-safety","c-style","c-opening"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("input", () => {
+      const key = id.replace("c-", "");
+      const map = { name:"name", age:"age", tag:"tagFull", presenting:"presenting", cognitions:"cognitions", safety:"safety", style:"style", opening:"opening" };
+      state.custom[map[key]] = el.value;
+      saveState(); refresh();
+    });
+  });
+}
+
+function renderPatientDetail(){
+  const w = $("#patient-detail-wrap");
+  const wrap = $("#patient-detail");
+  const p = PATIENTS.find(x => x.id === state.patient);
+  if (!p || state.patient === "custom") { w.style.display = "none"; return; }
+  w.style.display = "block";
+  const openDetail = state.cues;
+  wrap.innerHTML = `<summary>Профиль пациента (для тренера / промпта)</summary>
+    <div class="pd-box">
+      <dl>
+        <dt>Проблема</dt><dd>${esc(p.presenting)}</dd>
+        <dt>Ключевые убеждения</dt><dd><ul>${p.cognitions.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></dd>
+        <dt>Охранные стратегии</dt><dd><ul>${p.safety.map(s=>`<li>${esc(s)}</li>`).join("")}</ul></dd>
+        <dt>Стиль</dt><dd>${esc(p.style)}</dd>
+      </dl>
+      <div class="opening">«${esc(p.opening)}»</div>
+    </div>`;
+}
+
+function pillGroup(wrapId, items, getVal, onPick){
+  $(wrapId).innerHTML = items.map(o => {
+    const sel = getVal(o) === true;
+    return `<button type="button" class="pill ${sel?"selected":""}" data-v="${esc(o.id)}" title="${esc(o.desc||"")}">${esc(o.name)}</button>`;
+  }).join("");
+  $(wrapId).querySelectorAll(".pill").forEach(el => {
+    el.addEventListener("click", () => { onPick(el.dataset.v); refresh(); });
+  });
+}
+
+function renderSettings(){
+  pillGroup("#scale-wrap", SCALES, o => state.scale === o.id, v => { state.scale = v; });
+  pillGroup("#stage-wrap", STAGES, o => state.stage === o.id, v => { state.stage = v; });
+  pillGroup("#diff-wrap", [
+    { id:"standard", name:"Обычная", desc:"Стандартное поведение пациента." },
+    { id:"hard", name:"Сложнее", desc:"Размытые ответы, смешанная картина, ТIBs активнее. В упражнениях звёзды — фиолетовые." }
+  ], o => state.difficulty === o.id, v => { state.difficulty = v; });
+  pillGroup("#cues-wrap", [
+    { id:"on", name:"Показывать", desc:"Невербальные сигналы в скобках, например (теребит рукав)." },
+    { id:"off", name:"Скрыть", desc:"Без невербальных сигналов — сложнее считывать состояние." }
+  ], o => (state.cues ? o.id==="on" : o.id==="off"), v => { state.cues = v === "on"; });
+}
+
+function renderTibs(){
+  const wrap = $("#tib-wrap");
+  wrap.innerHTML = TIB_DEFS.map(t => `
+    <button type="button" class="chip ${state.tibs[t.id]?"on":""}" data-t="${t.id}">
+      <span class="dot"></span>${esc(t.name)} <small>${esc(t.desc)}</small>
+    </button>`).join("");
+  wrap.querySelectorAll(".chip").forEach(el => {
+    el.addEventListener("click", () => {
+      const id = el.dataset.t;
+      state.tibs[id] = !state.tibs[id];
+      renderTibs(); refresh();
+    });
+  });
+}
+
+/* ===================== SUMMARY / OUTPUT ===================== */
+function activePatient(){
+  return PATIENTS.find(x => x.id === state.patient) || null;
+}
+
+function patientValidationError(){
+  const p = activePatient();
+  if (!p) return "Выбери пациента (пункт 2).";
+  if (state.patient === "custom") {
+    if (!state.custom.presenting.trim()) return "Для «своего пациента» заполни жалобу / презентацию.";
+  }
+  return null;
+}
+
+function formatLabel(){
+  if (state.format === "exercise") {
+    const ex = EXERCISES.find(e => e.id === state.exercise);
+    return `Упражнение: ${ex ? ex.name : ""}`;
+  }
+  return "Свободная сессия";
+}
+
+function summaryLine(){
+  const p = activePatient();
+  const nm = p ? patientLabel(p, state.custom) : "—";
+  const psum = p ? (state.patient === "custom" ? state.custom.presenting : p.sum) : "";
+  return { nm, psum };
+}
+
+function refreshSummary(){
+  const s = $("#summary");
+  const p = activePatient();
+  const err = patientValidationError();
+  const stage = STAGES.find(x => x.id === state.stage);
+  const tibOn = TIB_DEFS.filter(t => state.tibs[t.id]);
+  const ex = state.format === "exercise" ? EXERCISES.find(e => e.id === state.exercise) : null;
+
+  s.innerHTML = `
+    <div class="l"><span class="k">Пациент</span><span class="v">${p ? esc(patientLabel(p, state.custom)) : "— не выбран"}</span></div>
+    ${p && state.patient !== "custom" ? `<div class="l"><span class="k">Картина</span><span class="v">${esc(p.sum)}</span></div>` : ""}
+    <div class="l"><span class="k">Формат</span><span class="v">${esc(formatLabel())}</span></div>
+    ${ex ? `<div class="l"><span class="k">Цель</span><span class="v">${esc(ex.obj)}</span></div>` : ""}
+    <div class="l"><span class="k">Шкала</span><span class="v">${esc(state.scale)}</span></div>
+    <div class="l"><span class="k">Этап</span><span class="v">${esc(stage ? stage.name : "")}</span></div>
+    <div class="l"><span class="k">Сложность</span><span class="v">${state.difficulty === "hard" ? "Сложнее" : "Обычная"}</span></div>
+    <div class="l"><span class="k">Cues</span><span class="v">${state.cues ? "показывать" : "скрыть"}</span></div>
+    <div class="l"><span class="k">TIBs</span><span class="v ${tibOn.length?"":"tib-empty"}">
+      ${tibOn.length ? `<span class="tags-inline">${tibOn.map(t=>`<span>${esc(t.name)}</span>`).join("")}</span>` : "нет"}</span></div>`;
+
+  const warn = $("#warn-block");
+  if (err) { warn.style.display = "block"; warn.textContent = "⚠ " + err; }
+  else warn.style.display = "none";
+
+  $("#btn-launch").disabled = !!err;
+  $("#btn-prompt").disabled  = !!err;
+
+  if (p) {
+    $("#out-launch").value = makeLaunch();
+    $("#out-prompt").value  = makePrompt();
+  } else {
+    $("#out-launch").value = "";
+    $("#out-prompt").value  = "";
+  }
+}
+
+function makeLaunch(){
+  const p = activePatient();
+  if (!p) return "";
+  const lines = [];
+  lines.push("Начинаем сессию CBT Trainer.");
+  if (state.patient === "custom") {
+    const nm = patientLabel(p, state.custom);
+    lines.push(`Пациент: ${nm}${state.custom.tagFull ? " — " + state.custom.tagFull.trim() : ""}.`);
+    lines.push(`Жалоба: ${state.custom.presenting.trim()}`);
+  } else {
+    lines.push(`Пациент: ${p.name}, ${p.age} — ${p.tag}.`);
+  }
+  lines.push(`Формат: ${formatLabel().toLowerCase()}.`);
+  if (state.format === "exercise") {
+    const ex = EXERCISES.find(e => e.id === state.exercise);
+    lines.push(`Цель упражнения: ${ex ? ex.obj : ""}`);
+  }
+  lines.push(`Шкала: ${state.scale}. Этап: ${(STAGES.find(x=>x.id===state.stage)||{}).name}.`);
+  lines.push(`Сложность: ${state.difficulty === "hard" ? "сложнее" : "обычная"}.`);
+  const tibOn = TIB_DEFS.filter(t => state.tibs[t.id]).map(t => t.id);
+  lines.push(`TIB: ${tibOn.length ? tibOn.join(", ") : "нет"}. Cues: ${state.cues ? "показывать" : "скрыть"}.`);
+  lines.push("Ты — пациент. Начни с вступительной реплики и веди роль, пока я не попрошу фидбек.");
+  return lines.join("\n");
+}
+
+function listify(arr){
+  if (Array.isArray(arr)) return arr.map(x => "- " + x).join("\n");
+  const s = String(arr || "").trim();
+  if (!s) return "";
+  return s.split("\n").map(l => "- " + l.trim()).join("\n");
+}
+
+function makePrompt(){
+  const p = activePatient();
+  if (!p) return "";
+  const stage = STAGES.find(x => x.id === state.stage);
+  const tibOn = TIB_DEFS.filter(t => state.tibs[t.id]);
+  const L = [];
+  const add = (t) => L.push(t);
+
+  add("Ты — CBT-тренер и одновременно симулируемый пациент. Пользователь играет терапевта и практикует навыки когнитивно-поведенческой терапии (КБТ).");
+  add("");
+  add("ПРАВИЛА РОЛИ:");
+  add("- Оставайся в роли пациента всю сессию. Не переключайся на роль тренера и НЕ подсказывай терапевту посреди сцены.");
+  add("- Веди диалог на русском. Реплики короткие, естественные — обычно 1–4 предложения, как у реального пациента (не лекции).");
+  add("- Невербальные сигналы давай редко, в скобках, например: (теребит рукав), (пауза), (глаза на мокром месте)." + (state.cues ? "" : " ПОЛЬЗОВАТЕЛЬ ВЫКЛЮЧИЛ СИГНАЛЫ — невербальные сигналы не показывай вовсе."));
+  add("- Реагируй на технику реалистично: хорошая (открытые вопросы, отражение, сотрудничество, нормализация, направляемое обнаружение, верный темп) → ты включаешься, раскрываешься, сотрудничаешь; плохая (допрос, преждевременные советы, игнорирование эмоций, спешка, жаргон, нотации, обесценивание) → замыкаешься, отвечаешь односложно, путаешься или защищаешься. Это обучающий сигнал для терапевта.");
+  add("- Если терапевт игнорирует твой дистресс или реплику о риске — один раз усиль её.");
+  add("- Не решай терапию за пользователя. Оценка компетенций даётся только в отдельном блоке «## Feedback» — по запросу (команда .rate).");
+  add("- Реализм: неидеальная память, лёгкие противоречия, эмоции, иногда уход в сторону.");
+  add("");
+  add("ПРОФИЛЬ ПАЦИЕНТА:");
+  if (state.patient === "custom") {
+    const c = state.custom;
+    add("- Имя/возраст: " + patientLabel(p, c));
+    if (c.tagFull.trim()) add("- Проблема: " + c.tagFull.trim());
+    if (c.presenting.trim()) add("- Презентация: " + c.presenting.trim());
+    if (c.cognitions.trim()) add("- Ключевые убеждения:\n" + listify(c.cognitions));
+    if (c.safety.trim()) add("- Охранные стратегии / поведение:\n" + listify(c.safety));
+    if (c.style.trim()) add("- Стиль общения: " + c.style.trim());
+    if (c.opening.trim()) add("- Вступительная реплика: «" + c.opening.trim() + "»");
+  } else {
+    add(`- Имя/возраст: ${p.name}, ${p.age}. Проблема: ${p.tag}.`);
+    add("- Презентация: " + p.presenting);
+    add("- Ключевые убеждения:\n" + listify(p.cognitions));
+    add("- Охранные стратегии / поведение:\n" + listify(p.safety));
+    add("- Стиль общения: " + p.style);
+    add("- Вступительная реплика: «" + p.opening + "»");
+  }
+  add("");
+  add("НАСТРОЙКИ СЕССИИ:");
+  add("- Шкала компетенций: " + (state.scale === "CTS-R"
+    ? "CTS-R (12 пунктов: повестка и следование ей, обратная связь, сотрудничество, темп, межличностная эффективность, выявление ключевых мыслей, эмоций, поведения, направляемое обнаружение, концептуальная интеграция, применение методов изменения, домашние задания). Оценка 0–6: 0 Неудовлетворительно, 1 Пограничный, 2 Продвинутый новичок, 3 Компетентный, 4 Искусный, 5 Продвинутый, 6 Эксперт."
+    : "UCL PWP (low-intensity): оценивай релевантный набор — сбор информации, постановка проблемы и целей, формулировка, применимые техники по диагнозу, структура сессии, направляемое обнаружение, межличностные навыки, управление риском. Оценка 0–6 по тем же якорям."));
+  add("- Этап терапии: " + stage.name + " — " + stage.desc + ".");
+  add("- Формат: " + formatLabel().toLowerCase() + (state.format === "exercise"
+    ? ". Цель упражнения (10 раундов): " + (EXERCISES.find(e=>e.id===state.exercise)||{}).obj + ". В конце дай «## Exercise feedback»: цель достигнута? + звёзды 1–3 + заметки по пунктам."
+    : ". Веди полноценную сессию; по команде .rate дай «## Feedback»."));
+  add("- Сложность: " + (state.difficulty === "hard"
+    ? "сложнее — размытые ответы, смешанная картина, активные ТIBs; в упражнениях звёзды за прохождение сложного режима — фиолетовые."
+    : "обычная."));
+  if (tibOn.length) {
+    add("- ТIBs (Treatment-Interfering Behaviours) включены:\n" + tibOn.map(t => "  - " + t.name + " — " + TIB_DESC[t.id]).join("\n"));
+  } else {
+    add("- ТIBs: не включены.");
+  }
+  add("");
+  add("КОМАНДЫ ПОЛЬЗОВАТЕЛЯ (в сессии): .tip — подсказка; .rate — полная оценка; .rate <пункт> — один пункт; .stage <этап> — сменить этап; .tib <имя|off> — переключить ТIB; .cues off|on — скрыть/показать сигналы; .example — рабочий пример упражнения; .end — итоги и прогресс; .new — новый сценарий. Неизвестная .команда — в роли удивлённо переспроси.");
+  add("");
+  add("ФОРМАТ ОЦЕНКИ (по .rate): отдельный блок «## Feedback» — общая оценка (2–4 предложения), баллы по релевантным пунктам с обоснованием, привязанным к реальным словам терапевта, статусы 🟢 оценено · 🟠 рекомендую показать · ⚪ не оценивалось, и ОДИН приоритетный следующий шаг. Упомяни, что оценка ИИ экспериментальна и решающим остаётся клиническое суждение пользователя.");
+  add("");
+  add("Помни: это тренировочный инструмент, а не терапия пользователя. Начни с короткого объявления карточки персонажа (2–3 строки) и затем дай вступительную реплику пациента.");
+  return L.join("\n");
+}
+
+function refresh(){
+  saveState();
+  refreshSummary();
+}
+
+/* ===================== INIT ===================== */
+function init(){
+  loadState();
+  renderFormats();
+  renderPatients();
+  renderSettings();
+  renderTibs();
+
+  $("#exercise").addEventListener("change", e => { state.exercise = e.target.value; refresh(); });
+
+  $("#btn-launch").addEventListener("click", () => copyText(makeLaunch(), "Запуск скопирован — вставь в чат со мной (навык CBT Trainer)"));
+  $("#btn-prompt").addEventListener("click", () => copyText(makePrompt(), "Полный промпт скопирован"));
+
+  $("#btn-reset").addEventListener("click", () => {
+    if (!confirm("Сбросить все настройки?")) return;
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+  });
+
+  refreshSummary();
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>

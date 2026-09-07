@@ -29,7 +29,21 @@ the user.
 
 ```
 .opencode/skills/cbt-trainer/SKILL.md   ← the skill definition
+index.html                              ← local web UI for choosing session parameters
 ```
+
+## Web UI (session settings)
+
+`index.html` — a self-contained tool (no server needed; open it directly in a
+browser). Pick a patient, format, competence scale, therapy stage, difficulty,
+TIBs and non-verbal cues, then either:
+
+- **Copy launch message** — short text to paste into opencode (or any chat with
+  the CBT Trainer skill loaded) to start the roleplay right away.
+- **Copy full prompt** — complete trainer prompt for ChatGPT / DeepSeek,
+  including the chosen patient's profile (with custom patient support).
+
+Settings persist in the browser's localStorage between visits.
 
 ## Use in opencode
 

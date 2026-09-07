@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7a6d">
 <title>CBT Trainer — настройка сессии</title>
 <style>
   :root {
@@ -19,12 +20,15 @@
     --radius: 14px;
     --shadow: 0 1px 3px rgba(15, 42, 51, .06), 0 8px 24px rgba(15, 42, 51, .05);
   }
+  html { -webkit-text-size-adjust: 100%; }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     font: 15px/1.5 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
     background: var(--bg);
     color: var(--ink);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
   a { color: var(--accent); }
 
@@ -230,6 +234,46 @@
 
   footer { max-width: 1280px; margin: 0 auto; padding: 0 28px 34px; color: var(--muted); font-size: 12.5px; }
   .opt-sub { margin-left: 30px; }
+
+  /* ---------- Mobile / responsive ---------- */
+  @media (max-width: 1020px) {
+    aside.summary { position: static; }
+  }
+  @media (max-width: 860px) {
+    .wrap { padding: 14px 14px 110px; gap: 14px; }
+    header.page { padding: 18px 16px 16px; }
+    header.page h1 { font-size: 20px; }
+    header.page p { font-size: 13px; }
+    section.card { padding: 14px 14px 16px; margin-bottom: 12px; }
+    section.card > .hint { margin-left: 0; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    .btn { min-height: 46px; }
+    details.out textarea { min-height: 120px; }
+    footer { padding: 0 14px 120px; }
+  }
+  @media (max-width: 520px) {
+    .row2 { gap: 12px; }
+    .sum-lines .k { min-width: 76px; }
+    .pd-box dl { grid-template-columns: 118px 1fr; }
+    .seg { flex-direction: column; }
+    .seg .opt { flex: 1 1 auto; }
+  }
+
+  /* Fixed bottom action bar (phones) — действия всегда под рукой */
+  .m-bar { display: none; }
+  @media (max-width: 720px) {
+    .m-bar {
+      display: flex; gap: 8px;
+      position: fixed; left: 10px; right: 10px;
+      bottom: calc(10px + env(safe-area-inset-bottom));
+      z-index: 40;
+      background: #ffffff; border: 1px solid var(--line); border-radius: 14px;
+      box-shadow: 0 -4px 16px rgba(15,42,51,.10), 0 10px 28px rgba(15,42,51,.16);
+      padding: 10px;
+    }
+    .m-bar .btn { flex: 1; min-width: 0; padding: 12px 8px; font-size: 13.5px; border-radius: 10px; }
+    .m-bar .btn .ico { font-size: 16px; }
+  }
 </style>
 </head>
 <body>
@@ -330,6 +374,11 @@
   Дополнительный тренажёр: не заменяет курс, супервизию или материалы сервиса. Оценки ИИ экспериментальны —
   применяй собственную клиническую оценку. Модель концепции — CBT Trainer app (trainer.soymh.com).
 </footer>
+
+<div class="m-bar">
+  <button class="btn primary" id="btn-launch-m" disabled><span class="ico">🚀</span> Запуск в чат</button>
+  <button class="btn secondary" id="btn-prompt-m" disabled><span class="ico">📋</span> Полный промпт</button>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -523,12 +572,23 @@ function copyText(text, okMsg){
   const done = () => toast(okMsg || "Скопировано");
   const fallback = () => {
     const ta = document.createElement("textarea");
-    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
-    document.body.appendChild(ta); ta.select();
-    try { document.execCommand("copy"); done(); } catch(e) { toast("Не удалось скопировать"); }
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "0";
+    ta.style.left = "0";
+    ta.style.opacity = "0";
+    ta.style.pointerEvents = "none";
+    document.body.appendChild(ta);
+    ta.focus();
+    try { ta.select(); ta.setSelectionRange(0, text.length); } catch(e) {}
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch(e) {}
     ta.remove();
+    if (ok) done();
+    else toast("Скопируй текст вручную — он в секции «Показать тексты» ниже");
   };
-  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done).catch(fallback);
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback);
   else fallback();
 }
 
@@ -736,6 +796,8 @@ function refreshSummary(){
 
   $("#btn-launch").disabled = !!err;
   $("#btn-prompt").disabled  = !!err;
+  $("#btn-launch-m").disabled = !!err;
+  $("#btn-prompt-m").disabled  = !!err;
 
   if (p) {
     $("#out-launch").value = makeLaunch();
@@ -858,6 +920,8 @@ function init(){
 
   $("#btn-launch").addEventListener("click", () => copyText(makeLaunch(), "Запуск скопирован — вставь в чат со мной (навык CBT Trainer)"));
   $("#btn-prompt").addEventListener("click", () => copyText(makePrompt(), "Полный промпт скопирован"));
+  $("#btn-launch-m").addEventListener("click", () => copyText(makeLaunch(), "Запуск скопирован — вставь в чат со мной (навык CBT Trainer)"));
+  $("#btn-prompt-m").addEventListener("click", () => copyText(makePrompt(), "Полный промпт скопирован"));
 
   $("#btn-reset").addEventListener("click", () => {
     if (!confirm("Сбросить все настройки?")) return;

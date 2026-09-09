@@ -65,8 +65,9 @@
   header.page p em { color: var(--accent-deep); font-style: normal; }
   header.page .hd-txt { position: relative; z-index: 1; }
   header.page .pearl {
-    position: absolute; top: 16px; right: 34px; z-index: 0;
-    filter: drop-shadow(0 10px 24px rgba(117,109,106,.16));
+    position: absolute; top: 18px; right: 36px; z-index: 0;
+    width: 230px; height: auto;
+    filter: drop-shadow(0 10px 24px rgba(117,109,106,.18));
   }
   .script-accent {
     font-family: "Caveat", cursive;
@@ -162,17 +163,15 @@
   }
   .pcard .row1 { display: flex; align-items: center; gap: 10px; }
   .pcard .ava {
-    width: 38px; height: 38px; border-radius: 50%;
+    width: 40px; height: 40px; border-radius: 50%;
+    overflow: hidden;
     background: linear-gradient(135deg, #EDF2F7, #DCE7EF);
     color: var(--accent-deep);
-    border: 1px solid #D3DEE8;
+    border: 1px solid #E3E9EE;
     display: inline-flex; align-items: center; justify-content: center;
     font-weight: 600; font-size: 15px; flex: 0 0 auto;
   }
-  .pcard:nth-of-type(5n+2) .ava { background: linear-gradient(135deg, #F1EDEA, #E4DDD6); color: var(--taupe-deep); border-color: #DDD5CD; }
-  .pcard:nth-of-type(5n+3) .ava { background: linear-gradient(135deg, #F6EFE8, #EBDDD2); color: #A97B52; border-color: #E3D2C2; }
-  .pcard:nth-of-type(5n+4) .ava { background: linear-gradient(135deg, #EDF2F7, #D9E6EF); color: #6E8AA8; border-color: #CFDDE8; }
-  .pcard:nth-of-type(5n+5) .ava { background: linear-gradient(135deg, #F5EFEF, #E6D8DC); color: #A4686F; border-color: #DCC8CE; }
+  .pcard .ava img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .pcard .who { line-height: 1.2; }
   .pcard .who .nm { font-weight: 500; font-size: 14.5px; color: var(--taupe-deep); }
   .pcard .who .ag { color: var(--muted); font-size: 12px; }
@@ -316,8 +315,7 @@
     header.page h1 { font-size: 22px; }
     header.page h1 .light { font-size: 17px; }
     header.page p { font-size: 13px; }
-    header.page .pearl { position: static; width: 64px; height: 64px; margin-bottom: 2px; }
-    header.page .pearl svg { width: 64px; height: 64px; }
+    header.page .pearl { position: static; width: 150px; height: auto; margin-bottom: 4px; }
     section.card { padding: 16px 15px 18px; margin-bottom: 12px; }
     section.card > .hint { margin-left: 0; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
@@ -351,26 +349,11 @@
 <body>
 
 <header class="page">
-  <div class="pearl" aria-hidden="true">
-    <svg width="92" height="92" viewBox="0 0 92 92" focusable="false">
-      <defs>
-        <radialGradient id="pg1" cx="35%" cy="28%" r="95%">
-          <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="55%" stop-color="#f7f3ef"/>
-          <stop offset="100%" stop-color="#dbe4ec"/>
-        </radialGradient>
-      </defs>
-      <circle cx="46" cy="46" r="36" fill="url(#pg1)" stroke="#cfd9e2" stroke-width="1.5"/>
-      <circle cx="37" cy="35" r="8" fill="#ffffff" opacity=".85"/>
-      <path d="M46 8 Q64 6 80 14 Q70 30 46 30 Q22 30 12 14 Q28 6 46 8Z" fill="none" stroke="#AEBACA" stroke-width="2.2" opacity=".65" stroke-linecap="round"/>
-      <path d="M18 58 Q32 47 46 47 Q60 47 74 58" fill="none" stroke="#AEBACA" stroke-width="2.6" opacity=".5" stroke-linecap="round"/>
-      <path d="M10 72 Q30 60 46 60 Q62 60 82 72" fill="none" stroke="#756D6A" stroke-width="1.6" opacity=".38" stroke-linecap="round"/>
-    </svg>
-  </div>
+  <img class="pearl" src="assets/logo.png" alt="Логотип «Жемчужина самости»" width="280" height="158">
   <div class="hd-txt">
     <p class="script-accent">жемчужина практики</p>
     <h1>CBT Trainer <span class="light">— настройка сессии</span></h1>
-    <p>Подбери пациента, формат, подход (<em>КБТ · телесно-ориентированный · смешанный</em>), шкалу и этап терапии — затем скопируй запуск для чата с навыком или полный промпт для ChatGPT / DeepSeek.</p>
+    <p>Подбери пациента, формат, подход (<em>КБТ · телесно-ориентированный · смешанный</em>), шкалу и этап терапии — затем скопируй полный промпт и отправь его в чат с навыком или в ChatGPT / DeepSeek.</p>
   </div>
   <div class="badges">
     <span class="badge">CTS-R / UCL PWP</span>
@@ -450,14 +433,11 @@
     <div class="sum-lines" id="summary"></div>
     <div class="warn" id="warn-block" style="display:none;"></div>
     <div class="btn-row">
-      <button class="btn primary" id="btn-launch" disabled>Скопировать запуск в чат</button>
-      <button class="btn secondary" id="btn-prompt" disabled>Скопировать полный промпт</button>
+      <button class="btn primary" id="btn-prompt" disabled>Скопировать полный промпт</button>
       <button class="btn ghost" id="btn-reset">Сбросить настройки</button>
     </div>
     <details class="out">
       <summary>Показать тексты (для ручного копирования)</summary>
-      <div style="font-size:12px;color:var(--muted);margin-top:8px;">Запуск в чат:</div>
-      <textarea id="out-launch" readonly></textarea>
       <div style="font-size:12px;color:var(--muted);margin-top:8px;">Полный промпт:</div>
       <textarea id="out-prompt" readonly></textarea>
     </details>
@@ -465,16 +445,10 @@
 
 </div>
 
-<footer>
-  <p class="script-accent">тише и глубже — практика</p>
-  <p>Дополнительный тренажёр: не заменяет курс, супервизию или материалы сервиса. Оценки ИИ экспериментальны —
-  применяй собственную клиническую оценку. Модель концепции — CBT Trainer app (trainer.soymh.com).
-  Визуальный стиль — бренд «Жемчужина самости».</p>
-</footer>
+
 
 <div class="m-bar">
-  <button class="btn primary" id="btn-launch-m" disabled><span class="ico">🚀</span> Запуск в чат</button>
-  <button class="btn secondary" id="btn-prompt-m" disabled><span class="ico">📋</span> Полный промпт</button>
+  <button class="btn primary" id="btn-prompt-m" disabled><span class="ico">📋</span> Полный промпт</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -483,7 +457,7 @@
 "use strict";
 /* ===================== DATA ===================== */
 const PATIENTS = [
-  { id:"charlotte", name:"Шарлотта", age:28, tag:"ГТР", tagFull:"Генерализованное тревожное расстройство",
+  { id:"charlotte", img:"assets/avatars/charlotte.jpg", name:"Шарлотта", age:28, tag:"ГТР", tagFull:"Генерализованное тревожное расстройство",
     sum:"«Что если»-беспокойство о работе, здоровье и партнёре; поиск успокоения.",
     presenting:"Постоянные «что если»-цепочки о работе, здоровье и безопасности партнёра. Непереносимость неопределённости, мышечное напряжение, плохой сон, частый поиск успокоения у коллег и партнёра.",
     cognitions:["«Если я не буду волноваться, случится что-то плохое»","«Я не справлюсь с неопределённостью»"],
@@ -491,7 +465,7 @@ const PATIENTS = [
     style:"Вежливая, словоохотливая, быстро перескакивает между тревогами; извиняется, что «растекается».",
     opening:"Простите, у меня столько всего на уме в последнее время… Я всё время прокручиваю всё в голове. Это… нормально?" },
 
-  { id:"marcus", name:"Маркус", age:34, tag:"Паника + агорафобия",
+  { id:"marcus", img:"assets/avatars/marcus.jpg", name:"Маркус", age:34, tag:"Паника + агорафобия",
     sum:"Панические атаки в метро; избегает автобусов и поездов; катастрофизация ощущений.",
     presenting:"Панические атаки в метро, теперь избегает автобусов и поездов. Катастрофически трактует телесные ощущения (сердце колотится = инфаркт, головокружение = упадёт в обморок), повышенная чувствительность к телесным сигналам.",
     cognitions:["«Эти симптомы значат, что я умираю»","«Если я запаникую на людях, все будут пялиться»"],
@@ -499,7 +473,7 @@ const PATIENTS = [
     style:"По-деловому, слегка смущается, приуменьшает своё расстройство.",
     opening:"Началось в метро месяца четыре назад. Сердце заколотило — я реально подумал, что всё. Теперь на работу не езжу, делаю крюк, и даже это даётся всё труднее." },
 
-  { id:"priya", name:"Прия", age:22, tag:"Социальная тревожность",
+  { id:"priya", img:"assets/avatars/priya.jpg", name:"Прия", age:22, tag:"Социальная тревожность",
     sum:"Страх оценки, покраснения и выступлений; репетирует фразы, избегает, руминации после.",
     presenting:"Боится чужой оценки, покраснения, выступлений и свиданий. Репетирует фразы, избегает вечеринок и выступлений в группе, подолгу «пережёвывает» события после.",
     cognitions:["«Все видят, как я тревожусь»","«Если я покраснею, они подумают, что я странная»"],
@@ -507,7 +481,7 @@ const PATIENTS = [
     style:"Тихая, извиняющаяся, точная в словах, иногда обрывает фразу.",
     opening:"Я стала пропускать семинары. У нас скоро выступление, и я уже сейчас паникую. Знаю, звучит глупо." },
 
-  { id:"tom", name:"Том", age:19, tag:"ОКР",
+  { id:"tom", img:"assets/avatars/tom.jpg", name:"Том", age:19, tag:"ОКР",
     sum:"Мытьё после «грязных» поверхностей и интрузия «а вдруг я толкнул человека»; проверки.",
     presenting:"Ритуалы мытья после прикосновений к дверным ручкам и общественным поверхностям; интрузивные образы «а вдруг я кого-то толкнул»; нейтрализация и проверки.",
     cognitions:["«Контакт с этой поверхностью может сделать меня серьёзно больным»","«Я плохой человек, раз у меня такие мысли»"],
@@ -515,7 +489,7 @@ const PATIENTS = [
     style:"Расстроенный, быстрый, самокритичный; переспрашивает «это звучит нормально?».",
     opening:"Я не могу остановить эти мысли. Я намыл руки до красноты. Я поискал в интернете и думаю, у меня, может… ну, вы понимаете…" },
 
-  { id:"aisha", name:"Аиша", age:41, tag:"Депрессия",
+  { id:"aisha", img:"assets/avatars/aisha.jpg", name:"Аиша", age:41, tag:"Депрессия",
     sum:"Ангедония, уход от общения, «нет смысла»; поведенческая активация; тренировка оценки риска.",
     presenting:"Сниженное настроение, ангедония, уход от друзей и хобби, пассивные дни, руминации, самокритика. На этапе оценки возможна реплика о пассивных суицидальных мыслях («иногда лучше бы не просыпаться») — без плана и намерения, для отработки оценки риска.",
     cognitions:["«Я неудачница»","«Что бы я ни делала, ничего не меняется»"],
@@ -523,7 +497,7 @@ const PATIENTS = [
     style:"Плоская, медленная, мало энергии; короткие ответы; оживает при конкретном и поддерживающем подходе.",
     opening:"Я не очень понимаю, зачем я здесь. Врач сказал прийти. Большинство дней я не могу встать с кровати — и, честно, не вижу смысла." },
 
-  { id:"daniel", name:"Дэниэл", age:47, tag:"Ипохондрия",
+  { id:"daniel", img:"assets/avatars/daniel.jpg", name:"Дэниэл", age:47, tag:"Ипохондрия",
     sum:"Проверяет уплотнения, гуглит симптомы, ходит к врачам за успокоением, сканирует тело.",
     presenting:"Многократно проверяет уплотнения, гуглит симптомы, записывается к врачам за успокоением, сканирует тело на ощущения.",
     cognitions:["«Непонятные ощущения опасны»","«Если врач пропустит — будет поздно»"],
@@ -531,7 +505,7 @@ const PATIENTS = [
     style:"Точный, перечисляет симптомы; тревожится, если успокоение резко забирают; хорошо реагирует, когда называют цикл, а не спорят.",
     opening:"Вчера нашёл ещё одно уплотнение на шее. Знаю, вы скажете, что это ерунда, но прошлый врач уже однажды пропустил." },
 
-  { id:"sofia", name:"София", age:17, tag:"АРФИД",
+  { id:"sofia", img:"assets/avatars/sofia.jpg", name:"София", age:17, tag:"АРФИД",
     sum:"Узкий список «безопасных» продуктов, страх подавиться и стошнить, конфликты за столом.",
     presenting:"Ограничивается узким списком «безопасных» продуктов; страх подавиться и стошнить; конфликты в семье за едой; следит за весом (важно оценить медицинский риск).",
     cognitions:["«Если я это съем, я подавлюсь»","«Безопаснее придерживаться того, что знаю»"],
@@ -539,7 +513,7 @@ const PATIENTS = [
     style:"Закрытая, защищается на тему еды, раскрывается, когда не давят; короткие фразы.",
     opening:"Все в семье твердят — просто ешь. Они не понимают: дело не в весе. Я физически не могу это проглотить." },
 
-  { id:"ben", name:"Бен", age:30, tag:"Низкая самооценка",
+  { id:"ben", img:"assets/avatars/ben.jpg", name:"Бен", age:30, tag:"Низкая самооценка",
     sum:"Убеждение «я недостаточно хорош»; поиск одобрения, самокритика, прокрастинация.",
     presenting:"Глубинное убеждение «я недостаточно хорош»; ищет одобрение, самокритичен, прокрастинирует, избегает обратной связи на работе, угождает людям.",
     cognitions:["«Если они увидят настоящего меня — отвергнут»","«Надо сделать идеально, иначе я ничтожество»"],
@@ -547,7 +521,7 @@ const PATIENTS = [
     style:"Ироничный, самокритичный, интеллектуализирует; сначала отшучивается от чувств.",
     opening:"Я всё откладываю этот отчёт на работе. Он даже не сложный — просто сижу и убеждаю себя, что облажаюсь." },
 
-  { id:"rachel", name:"Рэйчел", age:38, tag:"Бессонница",
+  { id:"rachel", img:"assets/avatars/rachel.jpg", name:"Рэйчел", age:38, tag:"Бессонница",
     sum:"Часами лежит без сна, смотрит на часы, дневной сон, страх «не заснуть».",
     presenting:"Проводит часы в кровати без сна, смотрит на часы, спит днём, лежит расстроенная, избегает вечерних планов — вдруг «не заснёт».",
     cognitions:["«Если я не высплюсь 8 часов — развалюсь»","«Я сейчас точно не засну»"],
@@ -555,7 +529,7 @@ const PATIENTS = [
     style:"Измотанная, раздражённая, подробно рассказывает о ночах.",
     opening:"Три ночи на этой неделе я лежала в два часа ночи и смотрела на часы. Утром я разбита и боюсь ложиться — знаю, что просто буду лежать." },
 
-  { id:"elena", name:"Елена", age:24, tag:"Эмоц. дисрегуляция",
+  { id:"elena", img:"assets/avatars/elena.jpg", name:"Елена", age:24, tag:"Эмоц. дисрегуляция",
     sum:"Чувствительность в отношениях, резкие смены настроения, кризисы. Сложный случай для ТIBs.",
     presenting:"Межличностная чувствительность, резкие смены настроения, кризисно-ориентированные сессии, мышление «всё или ничего» об отношениях. В анамнезе самоповреждения (без текущего намерения), умеренный текущий риск — мониторить.",
     cognitions:["«Все рано или поздно меня бросают»","«Я не выношу это чувство»"],
@@ -563,7 +537,7 @@ const PATIENTS = [
     style:"Интенсивная, драматичная, переключается между злостью и страданием; структурировать сложнее.",
     opening:"Я чуть не пришла. Говорила себе — ты, наверное, скажешь то же, что и все: что это я виновата." },
 
-  { id:"lev", name:"Лев", age:32, tag:"Шизофрения (стабильная фаза)",
+  { id:"lev", img:"assets/avatars/lev.jpg", name:"Лев", age:32, tag:"Шизофрения (стабильная фаза)",
     sum:"Слышит голоса и опасается слежки; избегает людей, плохо спит.",
     presenting:"Слышит комментирующие голоса («он ни на что не годен», «за ним следят») и умеренно параноидное убеждение о соседях/коллегах. Избегает выходить из дома, принимает лекарства нерегулярно, плохо спит. Не острая фаза — для практики вовлечения, нормализации и мягкой проверки убеждений о голосах.",
     cognitions:["«Голоса знают обо мне то, чего не знает никто»","«Я должен скрывать, что слышу голоса»","«Если за мной следят — что-то замышляют»"],
@@ -571,7 +545,7 @@ const PATIENTS = [
     style:"Тихий, настороженный; отвечает с паузами; о голосах говорит конкретно, если не обесценивают и не поддерживают; иронию не считывает.",
     opening:"Врач сказал прийти. Сразу скажу — про таблетки я уже всё слышал. Вы тоже будете говорить, что голосов нет?" },
 
-  { id:"igor", name:"Игорь", age:29, tag:"Биполярное расстройство I",
+  { id:"igor", img:"assets/avatars/igor.jpg", name:"Игорь", age:29, tag:"Биполярное расстройство I",
     sum:"После маниакальной весны — депрессия, вина, страх «снова всё разрушить».",
     presenting:"После маниакального эпизода весной (расточительство, рискованные решения, больница) — сейчас в депрессии: спит по 12 часов, вина и стыд, нет сил. Боится, что любое улучшение настроения или активности снова «разрушит всё». На этапе оценки возможна реплика о пассивном желании исчезнуть (без плана и намерения) — для практики оценки риска.",
     cognitions:["«Если я почувствую себя лучше — я снова всё разрушу»","«Принимать лекарства — значит признать, что я сломан»"],
@@ -579,7 +553,7 @@ const PATIENTS = [
     style:"Вялый, виноватый, немногословный; скептичен к планам («пробовал — срывается»).",
     opening:"После выписки вроде всё… а теперь сплю по двенадцать часов и не могу перестать думать о том, что наделал весной. Все твердят — режим. Я не верю, что от этого что-то меняется." },
 
-  { id:"mark", name:"Марк", age:34, tag:"Нарциссическое расстройство (черты)",
+  { id:"mark", img:"assets/avatars/mark.jpg", name:"Марк", age:34, tag:"Нарциссическое расстройство (черты)",
     sum:"После удара по самооценке: грандиозность сверху, уязвимость и стыд снизу.",
     presenting:"Пришёл после потери значимого статуса (не дали повышение; ушла партнёрша). Внешне винит всех, обесценивает, требует особого отношения; под оболочкой — острая уязвимость к критике и стыду.",
     cognitions:["«Если я не лучший — я ничто»","«Люди обязаны признавать мою ценность»","«Критика — это унижение»"],
@@ -587,7 +561,7 @@ const PATIENTS = [
     style:"Уверенный, чуть снисходительный, быстрые обесценивающие реплики; открывается, если уважать сильные стороны и мягко подходить к стыду.",
     opening:"Жена… то есть терапевт жены посоветовал мне прийти. Честно, не понимаю, зачем. Скажу прямо: это не я мешаю отделу — это они меня тянут вниз." },
 
-  { id:"gleb", name:"Глеб", age:27, tag:"Шизоидное расстройство (черты)",
+  { id:"gleb", img:"assets/avatars/gleb.jpg", name:"Глеб", age:27, tag:"Шизоидное расстройство (черты)",
     sum:"Комфортен один; контакт и чувства «не нужны»; пришёл под давлением других.",
     presenting:"Пришёл под давлением (работа, семья). Хорошо живёт в одиночестве, богатый внутренний мир, внешне почти без эмоций, близость не нужна; сам от одиночества не страдает, но «все говорят, что так нельзя».",
     cognitions:["«Люди истощают; одиночество — единственная безопасность»","«Показывать чувства глупо и незачем»","«Если кто-то станет близким, я потеряю себя»"],
@@ -595,7 +569,7 @@ const PATIENTS = [
     style:"Отстранённый, спокойный, прямолинейный, без тёплого контакта; парадоксально не против терапии, но и не вовлекается.",
     opening:"Меня попросили сходить. Честно, не вижу проблемы — я нормально живу. Но постоянно слышу, что «надо общаться». Вы тоже так считаете?" },
 
-  { id:"olga", name:"Ольга", age:45, tag:"Тяжёлая депрессия (рекуррентная)",
+  { id:"olga", img:"assets/avatars/olga.jpg", name:"Ольга", age:45, tag:"Тяжёлая депрессия (рекуррентная)",
     sum:"Почти не встаёт: телесная тяжесть, ангедония, ранние подъёмы.",
     presenting:"Несколько месяцев почти не встаёт, ест мало, «всё через силу», ранние пробуждения, телесная тяжесть («грудь давит», «как ватная»). Раньше звучали пассивные мысли о смерти (без плана и намерения) — риск-реплика для практики. Соматизированная картина — хороший кейс для телесно-ориентированной работы.",
     cognitions:["«Я никому не нужна»","«Это никогда не кончится»","«Тело меня предаёт»"],
@@ -603,7 +577,7 @@ const PATIENTS = [
     style:"Очень медленная, тихая, почти без интонаций; большие паузы; оживает от конкретного и валидирующего языка и вопросов о телесных ощущениях.",
     opening:"…Извините, я сегодня плохо соображаю. Последние месяцы — как будто на мне мешок лежит. Всё тяжело. Врач опять поменял таблетки, но я не знаю… (длинная пауза)" },
 
-  { id:"pyotr", name:"Пётр", age:68, tag:"Деменция (лёгкая, Альцгеймер)",
+  { id:"pyotr", img:"assets/avatars/pyotr.jpg", name:"Пётр", age:68, tag:"Деменция (лёгкая, Альцгеймер)",
     sum:"Забывчивость на недавние события, повторяет вопросы, тревога «я схожу с ума».",
     presenting:"Пришёл с женой (иногда она включается в разговор). Забывает недавние события, повторяет вопросы, теряет вещи, вечером раздражителен. Частично осознаёт, что память «стала хуже», тревожится, что «теряет себя». Эмоции сохранены — работа на принятие, поддерживающие стратегии памяти, валидацию и роль семьи. Важно: кейс для валидации и медленного темпа, не для жёстких когнитивных техник.",
     cognitions:["«Я схожу с ума»","«Лучше никому не говорить, чтобы не быть обузой»","«Я уже не тот, кем был»"],
@@ -679,7 +653,7 @@ const TIB_DESC = {
 
 /* ===================== STATE ===================== */
 const LS_KEY = "cbt-trainer-ui-v1";
-const APP_VERSION = "v5-pearl";
+const APP_VERSION = "v6-pearl";
 const state = {
   format: "session",      // session | exercise
   exercise: "agenda",
@@ -780,7 +754,7 @@ function renderPatients(){
     const nm = p.id === "custom" ? "Свой пациент" : `${p.name}, ${p.age}`;
     return `
     <button type="button" class="pcard ${sel?"selected":""}" data-p="${p.id}">
-      <span class="row1"><span class="ava">${p.id==="custom"?"+":esc(p.name[0])}</span>
+      <span class="row1"><span class="ava">${p.img?`<img src="${p.img}" alt="">`:(p.id==="custom"?"+":esc(p.name[0]))}</span>
         <span class="who"><span class="nm">${esc(nm)}</span></span></span>
       <span class="tag">${esc(p.tag)}</span>
       <span class="sum">${esc(p.sum)}</span>
@@ -952,44 +926,14 @@ function refreshSummary(){
   if (err) { warn.style.display = "block"; warn.textContent = "⚠ " + err; }
   else warn.style.display = "none";
 
-  $("#btn-launch").disabled = !!err;
   $("#btn-prompt").disabled  = !!err;
-  $("#btn-launch-m").disabled = !!err;
   $("#btn-prompt-m").disabled  = !!err;
 
   if (p) {
-    $("#out-launch").value = makeLaunch();
     $("#out-prompt").value  = makePrompt();
   } else {
-    $("#out-launch").value = "";
     $("#out-prompt").value  = "";
   }
-}
-
-function makeLaunch(){
-  const p = activePatient();
-  if (!p) return "";
-  const lines = [];
-  lines.push("Начинаем сессию CBT Trainer.");
-  if (state.patient === "custom") {
-    const nm = patientLabel(p, state.custom);
-    lines.push(`Пациент: ${nm}${state.custom.tagFull ? " — " + state.custom.tagFull.trim() : ""}.`);
-    lines.push(`Жалоба: ${state.custom.presenting.trim()}`);
-  } else {
-    lines.push(`Пациент: ${p.name}, ${p.age} — ${p.tag}.`);
-  }
-  lines.push(`Формат: ${formatLabel().toLowerCase()}.`);
-  if (state.format === "exercise") {
-    const ex = EXERCISES.find(e => e.id === state.exercise);
-    lines.push(`Цель упражнения: ${ex ? ex.obj : ""}`);
-  }
-  lines.push(`Шкала: ${state.scale}. Этап: ${(STAGES.find(x=>x.id===state.stage)||{}).name}.`);
-  lines.push(`Подход: ${approachLabel().toLowerCase()}.`);
-  lines.push(`Сложность: ${state.difficulty === "hard" ? "сложнее" : "обычная"}.`);
-  const tibOn = TIB_DEFS.filter(t => state.tibs[t.id]).map(t => t.id);
-  lines.push(`TIB: ${tibOn.length ? tibOn.join(", ") : "нет"}. Cues: ${state.cues ? "показывать" : "скрыть"}.`);
-  lines.push("Ты — пациент. Начни с вступительной реплики и веди роль, пока я не попрошу фидбек.");
-  return lines.join("\n");
 }
 
 function listify(arr){
@@ -1096,9 +1040,7 @@ function init(){
 
   $("#exercise").addEventListener("change", e => { state.exercise = e.target.value; refresh(); });
 
-  $("#btn-launch").addEventListener("click", () => copyText(makeLaunch(), "Запуск скопирован — вставь в чат со мной (навык CBT Trainer)"));
   $("#btn-prompt").addEventListener("click", () => copyText(makePrompt(), "Полный промпт скопирован"));
-  $("#btn-launch-m").addEventListener("click", () => copyText(makeLaunch(), "Запуск скопирован — вставь в чат со мной (навык CBT Trainer)"));
   $("#btn-prompt-m").addEventListener("click", () => copyText(makePrompt(), "Полный промпт скопирован"));
 
   $("#btn-reset").addEventListener("click", () => {

@@ -66,8 +66,7 @@
   header.page .hd-txt { position: relative; z-index: 1; }
   header.page .pearl {
     position: absolute; top: 18px; right: 36px; z-index: 0;
-    width: 230px; height: auto;
-    filter: drop-shadow(0 10px 24px rgba(117,109,106,.18));
+    width: auto; height: 108px;
   }
   .script-accent {
     font-family: "Caveat", cursive;
@@ -315,7 +314,7 @@
     header.page h1 { font-size: 22px; }
     header.page h1 .light { font-size: 17px; }
     header.page p { font-size: 13px; }
-    header.page .pearl { position: static; width: 150px; height: auto; margin-bottom: 4px; }
+    header.page .pearl { position: static; width: auto; height: 64px; margin-bottom: 4px; }
     section.card { padding: 16px 15px 18px; margin-bottom: 12px; }
     section.card > .hint { margin-left: 0; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
@@ -349,7 +348,7 @@
 <body>
 
 <header class="page">
-  <img class="pearl" src="assets/logo.png" alt="Логотип «Жемчужина самости»" width="280" height="158">
+  <img class="pearl" src="assets/logo.png" alt="Логотип «Жемчужина самости»" width="210" height="199">
   <div class="hd-txt">
     <p class="script-accent">жемчужина практики</p>
     <h1>CBT Trainer <span class="light">— настройка сессии</span></h1>
@@ -653,7 +652,7 @@ const TIB_DESC = {
 
 /* ===================== STATE ===================== */
 const LS_KEY = "cbt-trainer-ui-v1";
-const APP_VERSION = "v6-pearl";
+const APP_VERSION = "v7-pearl";
 const state = {
   format: "session",      // session | exercise
   exercise: "agenda",

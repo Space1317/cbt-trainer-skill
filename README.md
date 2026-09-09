@@ -35,6 +35,7 @@ the user.
 ```
 .opencode/skills/cbt-trainer/SKILL.md   ← the skill definition
 index.html                              ← local web UI for choosing session parameters
+serve.py                                ← optional no-cache static server for LAN access
 ```
 
 ## Web UI (session settings)

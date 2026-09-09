@@ -661,7 +661,7 @@ function renderFormats(){
       <div class="d">${o.d}</div>
     </div>`).join("");
   $("#fmt-wrap").querySelectorAll(".opt").forEach(el => {
-    const pick = () => { state.format = el.dataset.fmt; renderFormats(); };
+    const pick = () => { state.format = el.dataset.fmt; renderFormats(); refresh(); };
     el.addEventListener("click", pick);
     el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
   });
@@ -693,10 +693,8 @@ function renderPatients(){
   wrap.querySelectorAll(".pcard").forEach(el => {
     el.addEventListener("click", () => {
       state.patient = el.dataset.p;
-      if (state.patient === "custom") {
-        // keep it visible
-      }
       renderPatients();
+      refresh();
     });
   });
   renderCustom();
@@ -766,7 +764,7 @@ function pillGroup(wrapId, items, getVal, onPick){
     return `<button type="button" class="pill ${sel?"selected":""}" data-v="${esc(o.id)}" title="${esc(o.desc||"")}">${esc(o.name)}</button>`;
   }).join("");
   $(wrapId).querySelectorAll(".pill").forEach(el => {
-    el.addEventListener("click", () => { onPick(el.dataset.v); refresh(); });
+    el.addEventListener("click", () => { onPick(el.dataset.v); renderSettings(); refresh(); });
   });
 }
 

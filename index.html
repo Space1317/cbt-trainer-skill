@@ -285,10 +285,13 @@
   <div class="badges">
     <span class="badge">CTS-R / UCL PWP</span>
     <span class="badge">16 пациентов</span>
+    <span class="badge" id="ver-badge">v?</span>
     <span class="badge">ТIBs — режим сложнее</span>
     <span class="badge">Настройки сохраняются локально</span>
   </div>
 </header>
+
+<div id="js-err" style="display:none;margin:10px 28px 0;background:#fdecea;color:#b91c1c;border:1px solid #f5c6c0;border-radius:10px;padding:10px 14px;font-size:13px;"></div>
 
 <div class="wrap">
 
@@ -584,6 +587,7 @@ const TIB_DESC = {
 
 /* ===================== STATE ===================== */
 const LS_KEY = "cbt-trainer-ui-v1";
+const APP_VERSION = "v4-fix";
 const state = {
   format: "session",      // session | exercise
   exercise: "agenda",
@@ -988,6 +992,11 @@ function refresh(){
 /* ===================== INIT ===================== */
 function init(){
   loadState();
+  $("#ver-badge").textContent = APP_VERSION;
+  window.addEventListener("error", e => {
+    const b = $("#js-err");
+    if (b) { b.style.display = "block"; b.textContent = "Ошибка JS: " + (e.message || e.type || "unknown"); }
+  });
   renderFormats();
   renderPatients();
   renderSettings();

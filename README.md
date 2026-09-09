@@ -10,10 +10,15 @@ the user.
 
 ## What it does
 
-- **Simulated patients** — 10 built-in presentations (GAD, panic + agoraphobia,
+- **Simulated patients** — 16 built-in presentations (GAD, panic + agoraphobia,
   social anxiety, OCD, depression, health anxiety, ARFID, low self-esteem,
-  insomnia, emotion dysregulation), each with a presenting problem, key
-  cognitions, safety behaviours and a realistic conversational style.
+  insomnia, emotion dysregulation, schizophrenia, bipolar I, narcissistic
+  traits, schizoid traits, severe depression, mild dementia), each with a
+  presenting problem, key cognitions, safety behaviours and a realistic
+  conversational style.
+- **Body-oriented practice** — an optional somatic (телесно-ориентированный)
+  approach with its own roleplay rules, bodily cues and body-process feedback
+  items, for cases where cognitive work stalls.
 - **Roleplay** — the AI plays the patient while the trainee plays the
   therapist. The patient responds realistically to technique (good technique →
   engages; poor technique → withdraws).
@@ -106,9 +111,22 @@ Patient library (I will pick one, or you may pick for me):
    not sleeping.
 10. Elena, 24 - Emotion dysregulation: interpersonal sensitivity, rapid mood
     shifts, all-or-nothing thinking; harder case.
+11. Lev, 32 - Schizophrenia (stable): voices, moderate persecutory beliefs,
+    social avoidance; practise engagement and testing beliefs about voices.
+12. Igor, 29 - Bipolar I, post-manic depression: guilt, fear of "ruining
+    everything again", mood-stabiliser resistance; risk-rehearsal line.
+13. Mark, 34 - Narcissistic traits: grandiosity over vulnerability and shame,
+    devaluation, defensiveness about feedback.
+14. Gleb, 27 - Schizoid traits: comfortable alone, flat affect, detached;
+    "there is no problem".
+15. Olga, 45 - Severe recurrent depression: bedbound, somatic heaviness,
+    passive death wishes (practise risk assessment); good for body work.
+16. Pyotr, 68 - Mild dementia (Alzheimer's): forgetfulness, repeated
+    questions, fear of "losing himself"; validation and paced work.
 
 Session settings (optional, before we start):
 - Scale: CTS-R (default) or UCL PWP.
+- Approach: CBT (default), body-oriented (телесно-ориентированный), or blended.
 - Stage: Assessment, Engagement/Formulation, Intervention, or Relapse
   prevention.
 - TIBs (make it harder): problem denial, goal avoidance, increased risk,

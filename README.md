@@ -10,15 +10,16 @@ the user.
 
 ## What it does
 
-- **Simulated patients** — 16 built-in presentations (GAD, panic + agoraphobia,
+- **Simulated patients** — 19 built-in presentations (GAD, panic + agoraphobia,
   social anxiety, OCD, depression, health anxiety, ARFID, low self-esteem,
   insomnia, emotion dysregulation, schizophrenia, bipolar I, narcissistic
-  traits, schizoid traits, severe depression, mild dementia), each with a
+  traits, schizoid traits, severe depression, mild dementia, plus healthy
+  coaching clients: life direction, burnout, big transitions), each with a
   presenting problem, key cognitions, safety behaviours and a realistic
   conversational style.
-- **Body-oriented practice** — an optional somatic (телесно-ориентированный)
-  approach with its own roleplay rules, bodily cues and body-process feedback
-  items, for cases where cognitive work stalls.
+- **Approaches** — CBT (default), body-oriented (телесно-ориентированный),
+  blended, or coaching (self-discovery), each with its own roleplay rules and
+  competence feedback items.
 - **Roleplay** — the AI plays the patient while the trainee plays the
   therapist. The patient responds realistically to technique (good technique →
   engages; poor technique → withdraws).
@@ -124,10 +125,17 @@ Patient library (I will pick one, or you may pick for me):
     passive death wishes (practise risk assessment); good for body work.
 16. Pyotr, 68 - Mild dementia (Alzheimer's): forgetfulness, repeated
     questions, fear of "losing himself"; validation and paced work.
+17. Dasha, 31 - Healthy: life direction, "what do I actually want";
+    coaching/blended approach.
+18. Semyon, 36 - Healthy: work burnout, wants energy and routine, explicitly
+    no "clinical" framing.
+19. Kira, 28 - Healthy: big life transitions (move + baby), wants to live
+    them consciously.
 
 Session settings (optional, before we start):
 - Scale: CTS-R (default) or UCL PWP.
-- Approach: CBT (default), body-oriented (телесно-ориентированный), or blended.
+- Approach: CBT (default), body-oriented (телесно-ориентированный), blended,
+  or coaching (self-discovery, for healthy clients).
 - Stage: Assessment, Engagement/Formulation, Intervention, or Relapse
   prevention.
 - TIBs (make it harder): problem denial, goal avoidance, increased risk,

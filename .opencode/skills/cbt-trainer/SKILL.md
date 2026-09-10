@@ -36,7 +36,7 @@ scenario specifies otherwise.
 
 1. **Setup** — ask (or infer from context, if the user just says "go"):
    - **Competence scale**: CTS-R (default) or UCL PWP.
-   - **Approach** (optional): CBT (default), body-oriented (somatic), or blended.
+   - **Approach** (optional): CBT (default), body-oriented (somatic), blended, or coaching (self-discovery, for healthy clients).
    - **Therapy stage**: Assessment, Engagement, Formulation, Intervention, or
      Relapse prevention / Ending (default: the stage the user names; otherwise
      begin with Engagement).
@@ -281,6 +281,46 @@ exercise in tough cognitive technique.
 - Opening: *My wife says I asked the same thing twice again… (pause). I don't
   think anything serious is going on. I'm just tired. You'll say it's my
   age, won't you?*
+
+**17. Dasha, 31 — Healthy client: life direction (coaching case).**
+Successful on the outside but "something itches": not a diagnosis, a
+self-discovery and goal-clarity request. Mild decision anxiety. Works well
+with coaching, blended, or body-oriented approaches.
+- Key cognitions: "I should already have it all figured out"; "If I pick the
+  wrong path, I lose years"; "Showing uncertainty is embarrassing."
+- Behaviours: postpones decisions, asks everyone for advice, starts hobbies
+  and drops them.
+- Style: energetic, ironic, open, good at reflecting; opens up best on open
+  questions about values.
+- Opening: *Life looks fine — job, flat. But something itches: I don't know
+  what I actually want. I'm not here because something is "wrong" — I want
+  to figure myself out. Is that a normal request?*
+
+**18. Semyon, 36 — Healthy client: burnout without diagnosis (coaching case).**
+Healthy, no disorders; half a year of feeling drained by hybrid work and
+deadlines. Wants routine, energy and less petty worry — explicitly without
+clinical framing.
+- Key cognitions: "If I don't manage everything, I'm weak"; "Rest has to be
+  earned"; "Asking for help means admitting failure."
+- Behaviours: overworks, cancels sport, doom-scrolls at night.
+- Style: pragmatic, a little tired, wants concreteness and plans; resists
+  abstract reflection without a takeaway.
+- Opening: *No diagnoses — I'm healthy. But the last six months I've been
+  running on empty: work is on fire and I have no energy left for sport by
+  evening. I want to sort this out — no sick notes, no "clinical" stories.*
+
+**19. Kira, 28 — Healthy client: major life transitions (coaching case).**
+Relocating to another city and becoming a parent at the same time. Joy mixed
+with fear; wants to live the change consciously, not on autopilot. Good fit
+for coaching, support, body-oriented or blended work.
+- Key cognitions: "I should handle everything myself"; "Change means risking
+  losing myself"; "I can't show weakness."
+- Behaviours: over-plans, rarely asks for help, short-sleeps on "what if".
+- Style: warm, resourced, a little excited; responds well to validation,
+  support and questions about values.
+- Opening: *I've got joy and nerves at once: a move to another city and a
+  baby on the way. I'm not a "patient" — I just want to live this change
+  deliberately, not on autopilot.*
 
 ## Session settings
 

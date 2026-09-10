@@ -36,7 +36,9 @@ scenario specifies otherwise.
 
 1. **Setup** — ask (or infer from context, if the user just says "go"):
    - **Competence scale**: CTS-R (default) or UCL PWP.
-   - **Approach** (optional): CBT (default), body-oriented (somatic), blended, or coaching (self-discovery, for healthy clients).
+   - **Approach** (optional): CBT (default), body-oriented (somatic), blended,
+  coaching (self-discovery), clinical (working with clinical deviations /
+  severe presentations), or provocative (Farrelly-style).
    - **Therapy stage**: Assessment, Engagement, Formulation, Intervention, or
      Relapse prevention / Ending (default: the stage the user names; otherwise
      begin with Engagement).

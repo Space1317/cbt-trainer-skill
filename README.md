@@ -18,8 +18,9 @@ the user.
   presenting problem, key cognitions, safety behaviours and a realistic
   conversational style.
 - **Approaches** — CBT (default), body-oriented (телесно-ориентированный),
-  blended, or coaching (self-discovery), each with its own roleplay rules and
-  competence feedback items.
+  blended, coaching (self-discovery), clinical (deviations / severe
+  presentations), or provocative (Farrelly-style), each with its own roleplay
+  rules and competence feedback items.
 - **Roleplay** — the AI plays the patient while the trainee plays the
   therapist. The patient responds realistically to technique (good technique →
   engages; poor technique → withdraws).
@@ -135,7 +136,7 @@ Patient library (I will pick one, or you may pick for me):
 Session settings (optional, before we start):
 - Scale: CTS-R (default) or UCL PWP.
 - Approach: CBT (default), body-oriented (телесно-ориентированный), blended,
-  or coaching (self-discovery, for healthy clients).
+  coaching (self-discovery), clinical (deviations), or provocative.
 - Stage: Assessment, Engagement/Formulation, Intervention, or Relapse
   prevention.
 - TIBs (make it harder): problem denial, goal avoidance, increased risk,
